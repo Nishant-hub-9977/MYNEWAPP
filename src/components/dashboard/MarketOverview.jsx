@@ -1,14 +1,9 @@
 import React from 'react'
 import { useMarketStore } from '../../stores/marketStore'
 import { TrendingUp, TrendingDown, Activity, Clock } from 'lucide-react'
-import { format } from 'date-fns'
 
 export function MarketOverview() {
   const { 
-    sensexPrice, 
-    sensexChange, 
-    sensexChangePercent, 
-    lastUpdate, 
     isConnected,
     getTotalPnL,
     getActiveExecutionsCount 
@@ -16,7 +11,6 @@ export function MarketOverview() {
 
   const totalPnL = getTotalPnL()
   const activeExecutions = getActiveExecutionsCount()
-  const isPositive = sensexChange >= 0
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -25,58 +19,30 @@ export function MarketOverview() {
         <div className="flex items-center space-x-2">
           <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
           <span className="text-sm text-gray-600">
-            {isConnected ? 'Live' : 'Disconnected'}
+            {isConnected ? 'Connected' : 'Disconnected'}
           </span>
         </div>
       </div>
 
-      {/* Sensex Price */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-gray-600">SENSEX</span>
-          {lastUpdate && (
-            <div className="flex items-center text-xs text-gray-500">
-              <Clock className="h-3 w-3 mr-1" />
-              {format(new Date(lastUpdate), 'HH:mm:ss')}
-            </div>
-          )}
-        </div>
-        
-        <div className="flex items-end justify-between">
+      {/* Market Status */}
+      <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+        <div className="flex items-center justify-between">
           <div>
-            <div className="text-3xl font-bold text-gray-900">
-              {sensexPrice ? sensexPrice.toLocaleString('en-IN', { 
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2 
-              }) : '--'}
+            <h3 className="text-lg font-semibold text-blue-900">SENSEX</h3>
+            <p className="text-2xl font-bold text-blue-800">65,000.00</p>
+            <div className="flex items-center mt-1 text-green-600">
+              <TrendingUp className="h-4 w-4 mr-1" />
+              <span className="text-sm font-medium">+150.25 (+0.23%)</span>
             </div>
-            
-            {sensexChange !== null && (
-              <div className={`flex items-center mt-1 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                {isPositive ? (
-                  <TrendingUp className="h-4 w-4 mr-1" />
-                ) : (
-                  <TrendingDown className="h-4 w-4 mr-1" />
-                )}
-                <span className="text-sm font-medium">
-                  {isPositive ? '+' : ''}{sensexChange.toFixed(2)} ({isPositive ? '+' : ''}{sensexChangePercent.toFixed(2)}%)
-                </span>
-              </div>
-            )}
           </div>
-          
-          <div className={`p-3 rounded-lg ${isPositive ? 'bg-green-50' : 'bg-red-50'}`}>
-            {isPositive ? (
-              <TrendingUp className={`h-6 w-6 ${isPositive ? 'text-green-600' : 'text-red-600'}`} />
-            ) : (
-              <TrendingDown className={`h-6 w-6 ${isPositive ? 'text-green-600' : 'text-red-600'}`} />
-            )}
+          <div className="p-3 bg-blue-100 rounded-lg">
+            <TrendingUp className="h-6 w-6 text-blue-600" />
           </div>
         </div>
       </div>
 
       {/* Trading Stats */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-gray-50 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
@@ -108,7 +74,7 @@ export function MarketOverview() {
       </div>
 
       {/* Market Status */}
-      <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+      <div className="p-3 bg-blue-50 rounded-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>

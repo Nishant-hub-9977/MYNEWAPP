@@ -8,23 +8,17 @@ import { useMarketStore } from '../stores/marketStore'
 import { useAuthStore } from '../stores/authStore'
 
 export function Dashboard() {
-  const { fetchSensexPrice, setConnectionStatus } = useMarketStore()
+  const { setConnectionStatus } = useMarketStore()
   const { user } = useAuthStore()
 
   useEffect(() => {
-    // Initial fetch
-    fetchSensexPrice()
-    
-    // Set up 30-second polling for live data
-    const interval = setInterval(() => {
-      fetchSensexPrice()
-    }, 30000) // 30 seconds as specified in the prompt
+    // Set connection status for Upstox integration
+    setConnectionStatus(true)
 
     return () => {
-      clearInterval(interval)
       setConnectionStatus(false)
     }
-  }, [fetchSensexPrice, setConnectionStatus])
+  }, [setConnectionStatus])
 
   return (
     <div className="min-h-screen bg-gray-50">

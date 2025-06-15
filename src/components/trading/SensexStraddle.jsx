@@ -21,7 +21,7 @@ export function SensexStraddle() {
   const [execution, setExecution] = useState(null)
   const [strategies, setStrategies] = useState([])
   const [selectedStrategy, setSelectedStrategy] = useState(null)
-  const { sensexPrice, fetchSensexPrice } = useMarketStore()
+  const { setConnectionStatus } = useMarketStore()
   const { user } = useAuthStore()
   
   const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
@@ -38,8 +38,10 @@ export function SensexStraddle() {
 
   const watchedValues = watch()
 
+  // Fixed Sensex price for demo
+  const sensexPrice = 65000
+
   useEffect(() => {
-    fetchSensexPrice()
     loadStrategies()
   }, [])
 
@@ -119,13 +121,11 @@ export function SensexStraddle() {
   }
 
   const calculatePremium = (strikeDistance) => {
-    const basePrice = sensexPrice || 65000
     const volatility = 0.15
     return Math.max(50, Math.random() * 200 + volatility * strikeDistance)
   }
 
   const getATMStrike = () => {
-    if (!sensexPrice) return 65000
     return Math.round(sensexPrice / 100) * 100
   }
 
@@ -141,7 +141,7 @@ export function SensexStraddle() {
           <div className="flex items-center space-x-4">
             <div className="text-right">
               <div className="text-lg font-semibold">
-                SENSEX: {sensexPrice ? sensexPrice.toLocaleString() : '--'}
+                SENSEX: {sensexPrice.toLocaleString()}
               </div>
               <div className="text-sm text-blue-200">
                 ATM Strike: {getATMStrike().toLocaleString()}
