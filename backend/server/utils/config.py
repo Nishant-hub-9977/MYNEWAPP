@@ -11,4 +11,9 @@ def get_env_var(key: str, default: Optional[str] = None) -> str:
 # DhanHQ Configuration
 DHAN_SANDBOX_TOKEN = get_env_var("DHAN_SANDBOX_TOKEN")
 DHAN_API_URL = get_env_var("DHAN_API_URL", "https://api-sandbox.dhan.co")
+
+# Upstox Configuration
+UPSTOX_API_SECRET = get_env_var("UPSTOX_API_SECRET")
+
+# Server Configuration
 PORT = int(get_env_var("PORT", "8000"))

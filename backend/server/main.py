@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 from datetime import datetime
 from .routes.sensex import router as sensex_router
+from .routes.upstox import router as upstox_router
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -28,6 +29,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(sensex_router, prefix="/api/dhanhq")
+app.include_router(upstox_router, prefix="/api/upstox")
 
 # Startup event
 @app.on_event("startup")
@@ -36,6 +38,7 @@ async def startup_event():
     logger.info(f"📊 Server running on http://0.0.0.0:8000")
     logger.info("✅ CORS enabled for all origins")
     logger.info("🔄 DhanHQ API integration ready")
+    logger.info("🔐 Upstox OAuth integration ready")
 
 # Root endpoint
 @app.get("/")
@@ -47,7 +50,8 @@ async def root():
         "version": "1.0.0",
         "docs": "/docs",
         "health": "/api/health",
-        "sensex": "/api/dhanhq/sensex-price"
+        "sensex": "/api/dhanhq/sensex-price",
+        "upstox_callback": "/api/upstox/callback"
     }
 
 # Health check endpoint

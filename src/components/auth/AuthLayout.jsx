@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuthStore } from '../../stores/authStore'
-import { TrendingUp, Mail, Lock, User, Eye, EyeOff } from 'lucide-react'
+import { useUpstoxStore } from '../../stores/upstoxStore'
+import { TrendingUp, Mail, Lock, User, Eye, EyeOff, ExternalLink } from 'lucide-react'
 
 const signInSchema = z.object({
   email: z.string().email('Please enter a valid email'),
@@ -26,6 +27,7 @@ export function AuthLayout() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const { signIn, signUp, isLoading } = useAuthStore()
+  const { getAuthUrl } = useUpstoxStore()
 
   const schema = isSignUp ? signUpSchema : signInSchema
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
@@ -54,6 +56,11 @@ export function AuthLayout() {
     }
   }
 
+  const handleUpstoxLogin = () => {
+    const authUrl = getAuthUrl()
+    window.location.href = authUrl
+  }
+
   const toggleMode = () => {
     setIsSignUp(!isSignUp)
     setError('')
@@ -78,6 +85,27 @@ export function AuthLayout() {
 
         {/* Form */}
         <div className="bg-white rounded-2xl shadow-2xl p-8">
+          {/* Upstox Login Button */}
+          <div className="mb-6">
+            <button
+              onClick={handleUpstoxLogin}
+              className="w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 focus:ring-4 focus:ring-orange-200 transition-colors font-medium flex items-center justify-center space-x-2"
+            >
+              <ExternalLink className="h-5 w-5" />
+              <span>Sign in with Upstox</span>
+            </button>
+          </div>
+
+          {/* Divider */}
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">Or continue with email</span>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Sign Up Fields */}
             {isSignUp && (
@@ -228,7 +256,7 @@ export function AuthLayout() {
         {/* Demo Notice */}
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <p className="text-yellow-800 text-sm text-center">
-            <strong>Demo Mode:</strong> This is a demonstration platform. Use any email and password to continue.
+            <strong>Demo Mode:</strong> Use Upstox OAuth for live trading or email/password for demo access.
           </p>
         </div>
       </div>
